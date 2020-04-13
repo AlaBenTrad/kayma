@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<title>الخيمة العجيبة</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0,shrink-to-fit=no, user-scalable=no" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+<script src="js/jquery-3.4.1.min.js"></script>
+<link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+<link rel="stylesheet" type="text/css" href="css/default.css" />
+<link rel="stylesheet" type="text/css" href="css/bookblock.css" />
+<link rel="stylesheet" type="text/css" href="css/style.css" />
+<link rel="stylesheet" type="text/css" href="css/story.css?v=1.1" />
+
+<script src="js/modernizr.custom.js"></script>
+<script src="js/jquerypp.custom.js"></script>
+<script src="js/jquery.bookblock.js"></script>
+
+
+</head>
+
+<body>
+        <audio controls id="flipAudioFile" preload="auto" src="audio/flip.mp3" style="display: none">
+        </audio>
+        <audio controls id="audiofile" style="display: none">
+            <source src="audio/story-01_vo.mp3"  type="audio/mp3">
+        </audio>
+        <div class="play_btn_div">
+            <img class="img-fluid play_btn" onclick="startStory();" src="play_btn.gif">
+        </div>
+        <div class="row loading_div" style="display: none;">
+            <a href="javascript:void(0)" class="text-center" style="width: 100%;">
+                <img class="img-fluid" src="loading.gif">
+            </a>
+        </div>
+        <div class="container-fluid p-0">
+
+
+        
+        <div class="bb-custom-wrapper" style="display: none;">
+            <div id="bb-bookblock" class="bb-bookblock">
+                <div class="bb-item">
+                    <div class="bb-custom-side">
+                        <img src="images/demo1-cover.jpg" class="img-fluid"  alt="cover"/>
+                    </div>
+                </div> 
+
+                <div class="bb-item">
+                    <div class="bb-custom-side">
+                        <img src="images/demo1-slide01.jpg" class=" img-fluid" alt="image01"/>
+                    </div>
+                </div>
+
+                <div class="bb-item">
+                    <div class="bb-custom-side">
+                        <img src="images/demo1-slide02.jpg" class="img-fluid" alt="image01"/>
+                    </div>
+                </div>
+                <div class="bb-item">
+                    <div class="bb-custom-side">
+                        <img src="images/demo1-slide03.jpg" class="img-fluid" alt="image01"/>
+                    </div>
+                </div>
+                <div class="bb-item">
+                    <div class="bb-custom-side">
+                        <img src="images/demo1-slide04.jpg" class="img-fluid" alt="image01"/>
+                    </div>
+                </div>
+                <div class="bb-item">
+                    <div class="bb-custom-side">
+                        <img src="images/demo1-slide05.jpg" class="img-fluid" alt="image01"/>
+                    </div>
+                </div>
+                <div class="bb-item">
+                    <div class="bb-custom-side">
+                        <img src="images/demo1-slide06.jpg" class="img-fluid" alt="image01"/>
+                    </div>
+                </div>				
+                <div class="bb-item">
+                    <div class="bb-custom-side">
+                        <img src="images/demo1-slide07.jpg" class="img-fluid" alt="image01"/>
+                    </div>
+                </div>
+                <div class="bb-item">
+                    <div class="bb-custom-side">
+                        <img src="images/demo1-slide08.jpg" class="img-fluid" alt="image01"/>
+                    </div>
+                </div>
+                <div class="bb-item">
+                    <div class="bb-custom-side">
+                        <img src="images/demo1-slide09.jpg" class="img-fluid" alt="image01"/>
+                    </div>
+                </div>
+                
+                    <h1 class="line centered" id="subtitles" style="direction: rtl;"></h1>
+            </div>
+
+        <nav class="bb-custom-wrapper mt-0">
+            <a id="bb-nav-next"  href="#" class="bb-custom-icon"><img src="back.png" width="50" style="margin-top: -28px;"></a>
+
+
+            <span id="playpause" style="cursor: pointer;">
+                <img src="stop-button.png" width="50" style="margin-top: -28px"/>
+            </span>
+
+            <span style="cursor: pointer;" id="replay">
+                <img src="repeat.png" width="50" style="margin-top: -28px"/>
+            </span>
+            <a  id="bb-nav-prev" href="#" class="bb-custom-icon"><img src="next.png" width="50" style="margin-top: -28px;"></a>
+
+
+        </nav>
+        </div>
+    </div>
+<input type="hidden" name="latest_slide" id="latest_slide" value="0" />
+
+    <style>
+        
+    </style>
+
+    <script>
+        
+
+       
+        var start_data = [{"start_time":0,"end_time":2.25,"class":"page0"},{"start_time":2.35 ,"end_time":13.10,"class":"page1"},{"start_time":13.20,"end_time":25.10,"class":"page2"},{"start_time":25.15,"end_time":41.00,"class":"page3"},{"start_time":41.10,"end_time":55.26,"class":"page4"},{"start_time":56.10,"end_time":71.22,"class":"page5"},{"start_time":72.02,"end_time":93.13,"class":"page6"},{"start_time":93.20,"end_time":111.12,"class":"page7"},{"start_time":111.22,"end_time":136.05,"class":"page8"},{"start_time":136.25,"end_time":157.29,"class":"page9"}];
+        var audioPlayer = document.getElementById("audiofile");
+        var flipAudioFile = document.getElementById("flipAudioFile");
+
+        function play() {
+            audioPlayer.play();
+            audioPlayer.currentTime = 0;
+            setInterval(function(){
+                var audioPlayer = document.getElementById("audiofile");
+                if(audioPlayer.currentTime >= 0 && audioPlayer.readyState==4){
+                    $(".loading_div").hide();
+                    $(".bb-custom-wrapper").show();
+
+                }
+
+            }, 500);
+
+        }
+        function startStory() {
+            $(".play_btn_div").hide();
+            $(".loading_div").show();
+            play();
+
+        }
+
+        ( function(win, doc) {
+
+            var audioPlayer = doc.getElementById("audiofile");
+            var subtitles = doc.getElementById("subtitles");
+            $("#playpause").on("click",function(){
+                if (!$("#audiofile")[0].paused){
+
+                    $("#audiofile")[0].pause();
+                    $("#playpause > img").attr("src","play-button.png");
+                }else{
+
+                    $("#audiofile")[0].play();
+                    $("#playpause > img").attr("src","stop-button.png");
+                }
+            })
+
+            $(".bb-custom-icon").on("click",function () {
+                $("#flipAudioFile")[0].play();
+            });
+            $(".bb-custom-icon").on("click",function () {
+                $("#flipAudioFile")[0].play();
+            });
+
+            var syncData = {
+                0:[
+                {"end": " 01.18 ", "start": "0.000", "text": " الخيمة "},
+                {"end": "02.25 ", "start": "01.19", "text": " العجيبة "},
+
+
+                ], 
+                1 : [/*01*/
+                {"end": " 03.07 ", "start": " 02.28 ", "text": "أنا"},
+{"end": " 04.05 ", "start": " 03.08 ", "text": "يارا،"},
+{"end": " 04.50 ", "start": " 04.06 ", "text": " عُمري "},
+{"end": " 05.03 ", "start": " 04.51 ", "text": "سِتُّ"},
+{"end": " 06.00 ", "start": " 05.04 ", "text": " سنوات، "},
+{"end": " 06.44 ", "start": "06.03 ", "text": " وهذا "},
+{"end": " 06.80 ", "start": " 06.45 ", "text": " أخي "},
+{"end": " 07.40 ", "start": " 06.81 ", "text": " سَعْدٌ،  "},
+{"end": " 08.14 ", "start": " 07.41 ", "text": " عُمره "},
+{"end": " 09.01 ", "start": " 08.15 ", "text": " أربعُ <br> "},
+{"end": " 10.00 ", "start": " 09.02 ", "text": " سنوات."},
+{"end": " 10.50 ", "start": " 10.05 ", "text": " نلعب "},
+{"end": " 10.99 ", "start": " 10.51 ", "text": " أنا "},
+{"end": " 11.50 ", "start": " 11.00 ", "text": " وسعد "},
+{"end": " 12.06 ", "start": " 11.51 ", "text": " كثيرًا "},
+{"end": " 13.10 ", "start": " 12.07 ", "text": " معًا! "},
+
+                   
+
+                
+                ],
+                2 : [/*2*/
+               
+{"end": " 14.02 ", "start": " 13.15 ", "text": " صَنعَتْ "},
+{"end": " 14.55 ", "start": " 14.03 ", "text": " أمّي "},
+{"end": " 14.95 ", "start": " 14.56 ", "text": " لنا "},
+{"end": " 15.46 ", "start": " 14.96 ", "text": " خيمةً "},
+{"end": " 16.08 ", "start": " 15.47 ", "text": " ملوَّنةً "},
+{"end": " 16.49 ", "start": " 16.10 ", "text": " في "},
+{"end": " 17.21 ", "start": " 16.50 ", "text": " غرفتنا.<br> "},
+{"end": " 18.16 ", "start": " 17.25 ", "text": " نلعب "},
+{"end": " 19.03 ", "start": " 18.17 ", "text": " ونجلِس "},
+{"end": " 19.41 ", "start": " 19.04 ", "text": " أنا "},
+{"end": " 20.00 ", "start": " 19.42 ", "text": " وسعد "},
+{"end": " 20.53 ", "start": " 20.01", "text": " كثيرًا "},
+{"end": " 21.09 ", "start": " 20.54 ", "text": " داخل "},
+{"end": " 22.05", "start": " 21.10", "text": " الخيمة <br>"},
+{"end": " 22.47", "start": " 22.06", "text": " مع "},
+{"end": " 23.02", "start": " 22.48", "text": " دُميتي "},
+{"end": " 24.00", "start": " 23.03", "text": " ودبدوبي "},
+{"end": " 25.10", "start": " 24.01", "text": " الأحمر. "},
+
+
+                    	
+                ],
+                3 : [/*3*/
+               
+{"end": " 26.03", "start": " 25.15", "text": " يوم "},
+{"end": " 26.75", "start": " 26.04", "text": " السَّبت "},
+{"end": " 27.16", "start": " 26.76", "text": " تصبح "},
+{"end": " 28.10", "start": " 27.17", "text": " خيمتنا "},
+{"end": " 28.56", "start": " 28.11", "text": " وسط "},
+{"end": " 29.18", "start": " 28.57", "text": " الصّحراء. "},
+{"end": " 30.19", "start": " 29.19", "text": " وتصبح "},
+{"end": " 31.07", "start": " 30.20", "text": " الدُّمى "},
+{"end": " 32.06", "start": " 31.08", "text": " والوسائِد<br> "},
+{"end": " 33.04", "start": " 32.07", "text": " الجِمال "},
+{"end": " 34.20", "start": " 33.05", "text": " والخِراف. "},
+{"end": " 35.05", "start": " 34.24", "text": " أمّا "},
+{"end": " 35.99", "start": " 35.06", "text": " دبدوبي "},
+{"end": " 36.52", "start": " 36.00", "text": " فهو "},
+{"end": " 37.09", "start": " 36.53", "text": " الرّاعي،  "},
+{"end": " 38.01", "start": " 37.11", "text": " يدخل "},
+{"end": " 38.71", "start": " 38.02", "text": " خَيمَتنا "},
+{"end": " 39.32", "start": " 38.72", "text": " ليأكُلَ "},
+{"end": " 41.00", "start": " 39.33", "text": " معنا."},
+                                   
+                    
+                ],
+                4 : [/*4*/
+{"end": " 41.54", "start": " 41.10", "text": " يوم "},
+{"end": " 42.25", "start": " 41.55", "text": " الأحد "},
+{"end": " 43.20", "start": " 42.27", "text": " خَيْمَتُنا "},
+{"end": " 44.00", "start": " 43.21", "text": " على "},
+{"end": " 44.66", "start": " 44.01", "text": " شاطئ "},
+{"end": " 45.10", "start": " 44.67", "text": " البحر..<br> "},
+{"end": " 46.04", "start": " 45.15", "text": " نفرِش "},
+{"end": " 46.63", "start": " 46.05", "text": " شَرشَف "},
+{"end": " 47.05", "start": " 46.64", "text": " سعدٍ "},
+{"end": " 47.65", "start": " 47.06", "text": " الأزرق "},
+{"end": " 48.22", "start": " 47.66", "text": " ليصبح "},
+{"end": " 49.17", "start": " 48.23", "text": " البَحر.<br> "},
+{"end": " 50.14", "start": " 49.19", "text": " نَصيد "},
+{"end": " 51.06", "start": " 50.15", "text": " السَّمك "},
+{"end": " 52.13", "start": " 51.07", "text": " ونَشويه "},
+{"end": " 53.20", "start": " 52.14", "text": " ونأكُله "},
+{"end": " 54.07", "start": " 53.21", "text": " داخل "},
+{"end": " 55.26", "start": " 54.08", "text": " الخيمةَ."},
+
+	
+                   
+                ],
+                5 : [/*5*/
+{"end": " 56.59", "start": " 56.10", "text": " يومَ "},
+{"end": " 57.70", "start": " 56.60", "text": " الإثنين "},
+{"end": " 58.40", "start": " 57.71", "text": " تُصبِحُ "},
+{"end": " 59.20", "start": " 58.41", "text": " خَيْمتنا "},
+{"end": "59.60", "start": " 59.21", "text": " غَيْمة. "},
+{"end": "60.00", "start": " 59.61", "text": " تطير "},
+{"end": " 60.50", "start": " 60.01", "text": " بِنا "},
+{"end": " 61.0", "start": " 60.51", "text": " في "},
+{"end": " 61.59", "start": " 61.01", "text": " السماء. "},
+{"end": " 62.17", "start": "61.60", "text": " يهتِف "},
+{"end": " 63.05", "start": " 62.18", "text": " سعدٌ: <br>"},
+{"end": "64.04", "start": " 63.06", "text": " انظري "},
+{"end": "64.43", "start": "64.05", "text": " إلى "},
+{"end": "65.02", "start": "64.44", "text": " الطيور "},
+{"end": "65.43", "start": "65.03", "text": " الّتي "},
+{"end": "66.01", "start": "65.44", "text": " تُحلّق "},
+{"end": "67.07", "start": "66.02", "text": " بجانبنا!  "},
+{"end": "67.69", "start": "67.08", "text": " وأرُدُّ "},
+{"end": "68.10", "start": "67.70", "text": " عليه:"},
+{"end": "68.60", "start": "68.11", "text": " انظُر "},
+{"end": "69.00", "start": "68.61", "text": " إلى "},
+{"end": "70.69", "start": "69.01", "text": " قوس <br>"},
+{"end": "71.22", "start": "70.70", "text": " الألوان! "},
+
+
+                   ],
+                6 : [/*6*/
+                {"end": "72.44", "start": "72.02", "text": " نسمع "},
+{"end": "72.99", "start": "72.45", "text": " صوت "},
+{"end": "73.42", "start": "73.00", "text": " أمي "},
+{"end": "74.09", "start": "73.45", "text": " تقول:  "},
+{"end": "75.07", "start": "74.10", "text": " هيّا! "},
+{"end": "75.51", "start": "75.10", "text": " حانَ "},
+{"end": "76.07", "start": "75.52", "text": " وقت "},
+{"end": "77.17", "start": "76.08", "text": " النَّوم!  "},
+
+{"end": "78.25", "start": "77.22", "text": " فأقولُ: "},
+
+{"end": "79.13", "start": "78.27", "text": " حَسنًا "},
+{"end": "79.49", "start": "79.14", "text": " يا "},
+{"end": "80.11", "start": "79.50", "text": " أمي..<br> "},
+{"end": "81.04", "start": "80.13", "text": " دقائق "},
+{"end": "81.56", "start": "81.05", "text": " حتى "},
+{"end": "82.04", "start": "81.57", "text": " نَهبِط "},
+{"end": "82.43", "start": "82.05", "text": " من "},
+{"end": "83.02", "start": "82.44", "text": " الغَيمة. "},
+{"end": "84.04", "start": "83.07", "text": " تسألنا "},
+{"end": "85.00", "start": "84.05", "text": " أمي: "},
+
+{"end": "85.64", "start": "85.02", "text": " ما الّذي "},
+
+{"end": "86.14", "start": "85.65", "text": " اتفقنا "},
+{"end": "87.22", "start": "86.15", "text": " عليه؟ "},
+{"end": "88.19", "start": "87.25", "text": " فنَرُدّ <br>"},
+
+{"end": "89.08", "start": "88.20", "text": " بصوتٍ "},
+{"end": "90.08", "start": "89.09", "text": " واحدٍ: "},
+{"end": "91.06", "start": "90.12", "text": " نُرتِب "},
+{"end": "92.02", "start": "91.08", "text": " غرفتنا "},
+{"end": "92.57", "start": "92.03", "text": " قبل "},
+{"end": "93.13", "start": "92.58", "text": " النَّوم!"},
+						
+                   			
+                ],
+                7 : [/*7*/
+                {"end": "94.01", "start": "93.16", "text": " نَهبِط "},
+
+{"end": "94.49", "start": "94.02", "text": " من "},
+
+{"end": "95.10", "start": "94.50", "text": " الغيمة،  "},
+{"end": "96.08", "start": "95.12", "text": " فأَجْمع "},
+{"end": "96.87", "start": "96.09", "text": " الألعاب "},
+
+{"end": "97.42", "start": "96.88", "text": " وأُعيدُها "},
+{"end": "97.91", "start": "97.43", "text": " إلى "},
+{"end": "98.57", "start": "97.92", "text": " مكانها "},
+{"end": "98.88", "start": "98.58", "text": " في "},
+{"end": "99.23", "start": "98.89", "text": " صُندوق "},
+{"end": "100.27", "start": "99.24", "text": " الألعاب.<br> "},
+{"end": "101.46", "start": "101.00", "text": " أما "},
+
+{"end": "102.09", "start": "101.47", "text": " سَعدٌ "},
+{"end": "103.04", "start": "102.10", "text": " فيعيد "},
+
+{"end": "104.00", "start": "103.05", "text": " الوَسائدَ "},
+{"end": "104.49", "start": "104.01", "text": " إلى "},
+{"end": "105.01", "start": "104.50", "text": " الأَسِرَّة "},
+
+{"end": "105.99", "start": "105.02", "text": " الخاصَّة "},
+{"end": "106.44", "start": "106.00", "text": " بها.."},
+{"end": "107.17", "start": "106.47", "text": " وهكذا "},
+{"end": "108.12", "start": "107.18", "text": " أصبحت <br>"},
+{"end": "109.06", "start": "108.13", "text": " غرفتنا "},
+{"end": "111.12", "start": "109.07", "text": " مُرتَّبة.."},
+
+
+
+                ],
+                8 : [/*8*/
+                {"end": "112.08", "start": "111.22", "text": " بعد "},
+
+{"end": "112.55", "start": "112.09", "text": " ترتيبِ "},
+
+{"end": "113.20", "start": "112.56", "text": " غُرفتنا، "},
+{"end": "114.24", "start": "113.24", "text": " نتناول "},
+{"end": "115.13", "start": "114.25", "text": " العشاء "},
+
+{"end": "115.44", "start": "115.14", "text": " مع "},
+{"end": "116.03", "start": "115.45", "text": " أُمّي "},
+{"end": "117.04", "start": "116.04", "text": " وأَبي. "},
+{"end": "117.48", "start": "117.07", "text": " بعد "},
+{"end": "118.02", "start": "117.49", "text": " ذلك "},
+{"end": "119.00", "start": "118.03", "text": " نَغتَسِل<br> "},
+{"end": "119.50", "start": "119.01", "text": " ونَلْبَس "},
+
+{"end": "120.11", "start": "119.51", "text": " ملابِسَ "},
+
+{"end": "121.04", "start": "120.12", "text": " النَّوم، "},
+{"end": "121.49", "start": "121.09", "text": " ثم "},
+{"end": "122.04", "start": "121.50", "text": " نُنَظّف "},
+
+{"end": "123.14", "start": "122.05", "text": " أسنانَنا. "},
+{"end": "124.04", "start": "123.17", "text": " نسأل "},
+{"end": "124.80", "start": "124.05", "text": " أُمّي: "},
+{"end": "125.23", "start": "124.81", "text": " ما الّذي "},
+{"end": "126.08", "start": "125.25", "text": " اتّفقنا <br>"},
+{"end": "127.13", "start": "126.09", "text": " عليه؟ "},
+{"end": "128.07", "start": "127.17", "text": "فتَردّ"},
+
+{"end": "128.40", "start": "128.08", "text": " وهي "},
+
+{"end": "129.17", "start": "128.51", "text": " تضحك: "},
+{"end": "130.08", "start": "129.19", "text": " نقرأ "},
+{"end": "131.14", "start": "130.09", "text": " قِصّةً. "},
+
+{"end": "132.12", "start": "131.21", "text": " اللّيْلة "},
+{"end": "132.55", "start": "132.13", "text": " دَوْرُ "},
+{"end": "133.10", "start": "132.56", "text": " سَعدٍ "},
+{"end": "134.02", "start": "133.11", "text": " لاختيارِ "},
+{"end": "136.14", "start": "134.03", "text": " القِصَّة. "},
+
+
+
+                   				
+                ],
+                9 : [/*9*/
+                {"end": "137.16", "start": "136.25", "text": " أحتضِن "},
+{"end": "138.05", "start": "137.17", "text": " دَبدوبي "},
+
+{"end": "138.46", "start": "138.06", "text": " في "},
+
+{"end": "139.09", "start": "138.47", "text": " سَريري. "},
+{"end": "140.03", "start": "139.11", "text": " يسألُني "},
+{"end": "140.58", "start": "140.04", "text": " سعد "},
+{"end": "140.90", "start": "140.59", "text": " وهو "},
+
+{"end": "141.48", "start": "140.91", "text": " نعسان:  "},
+{"end": "142.21", "start": "141.49", "text": " يارا "},
+{"end": "143.04", "start": "142.23", "text": " أين "},
+{"end": "143.63", "start": "143.05", "text": " ستكون <br>"},
+{"end": "144.13", "start": "143.64", "text": " خيمَتُنا "},
+{"end": "145.12", "start": "144.14", "text": " غدًا؟ "},
+{"end": "146.02", "start": "145.17", "text": " أردُّ "},
+
+{"end": "147.01", "start": "146.03", "text": " عليه: "},
+
+{"end": "147.56", "start": "147.02", "text": " إنَّها "},
+{"end": "148.01", "start": "147.57", "text": " الخيمة "},
+{"end": "148.89", "start": "148.02", "text": " العجيبة، "},
+{"end": "149.34", "start": "148.90", "text": " غدًا "},
+{"end": "150.10", "start": "149.35", "text": " ستكون "},
+{"end": "150.58", "start": "150.11", "text": " في "},
+{"end": "151.08", "start": "150.59", "text": " مكانٍ <br>"},
+{"end": "152.16", "start": "151.09", "text": " جديدٍ.  "},
+{"end": "153.04", "start": "152.18", "text": " يقول "},
+{"end": "153.55", "start": "153.05", "text": " سعد "},
+{"end": "154.07", "start": "153.56", "text": " قبل "},
+{"end": "154.48", "start": "154.08", "text": " أن "},
+{"end": "155.10", "start": "154.49", "text": " ينام: "},
+{"end": "155.53", "start": "155.11", "text": " متى "},
+{"end": "156.18", "start": "155.54", "text": " يأتي "},
+{"end": "157.29", "start": "156.19", "text": " غدًا. "},
+
+               
+                ]			
+            };
+
+            createSubtitle(0,audioPlayer,start_data[0].start_time,start_data[0].end_time);
+            $("#replay").on("click",function(){
+                var page_id = $("#latest_slide").val();
+                createSubtitle(page_id,audioPlayer,start_data[page_id].start_time,start_data[page_id].end_time,true);
+            });
+
+
+            function createSubtitle(id,audioPlayer,start_time,end_time,play=false)
+            {
+                $("#subtitles").removeClass();
+                $("#subtitles").addClass("line centered page"+id)
+                audioPlayer.pause();
+                subtitles.innerText = '';
+                audioPlayer.currentTime = start_time;
+                if(id>0 || play===true){
+                    let play_time = setTimeout(function() {
+                        audioPlayer.play();
+                        $("#playpause > img").attr("src","stop-button.png");
+                    },500);
+                }
+
+                var element;
+                for (var i = 0; i < syncData[id].length; i++) {
+                    element = doc.createElement('span');
+                    element.setAttribute("id", "c_" +id+ i);
+                    element.innerHTML = syncData[id][i].text + " ";
+                    subtitles.appendChild(element);
+                }
+
+                audioPlayer.ontimeupdate = (event) => {
+                    syncData[id].forEach(function(element, index, array){
+
+                        var page_id = $("#latest_slide").val();
+
+                        if( page_id == 9 )
+                        document.getElementById("bb-nav-next").style.display = "none";
+                        
+                    
+                        if( page_id == 0 )
+                        document.getElementById("bb-nav-prev").style.display = "none";
+
+                        
+                        if( page_id == 9 )
+                        subtitles.children[index].style.color = '#ffffff';
+                        else
+                        subtitles.children[index].style.color = '#46801f';
+                       
+                        
+                        if( audioPlayer.currentTime >= element.start && audioPlayer.currentTime <= element.end )
+                            subtitles.children[index].style.color = '#b50808';
+
+                    });
+
+                    if(audioPlayer.currentTime>=end_time){
+                        audioPlayer.pause();
+                        syncData[id].forEach(function(element, index, array){
+
+                           
+                            
+                            subtitles.children[index].style.color = '#46801f';
+                        });
+                        $("#playpause > img").attr("src","icons/play-button.png");
+                    }
+                };
+            }
+            var Page = (function() {
+                var config = {
+                        $bookBlock : $( '#bb-bookblock' ),
+                        $navNext : $( '#bb-nav-next' ),
+                        $navPrev : $( '#bb-nav-prev' ),
+                        $navFirst : $( '#bb-nav-first' ),
+                        $navLast : $( '#bb-nav-last' )
+                    },
+                    init = function() {
+                        config.$bookBlock.bookblock( {
+                            speed : 900,
+                            direction: 'rtl',
+                            shadowSides : 0.8,
+                            shadowFlip : 0.7,
+                            onEndFlip :function( old, page, isLimit ) {
+                                $(window).scrollTop(5);
+                                $("#latest_slide").val(page)
+                                if(page==0){
+                                    $('.bb-custom-icon-arrow-right').show();
+                                    //$('#bb-nav-prev').hide();
+                                }
+
+                                if(page == 1){
+                                   // $('#bb-nav-next').hide();
+                                    $('#bb-nav-prev').show();
+                                }
+                                else
+                                    $('#bb-nav-next').show();
+
+                                //audioPlayer.currentTime = start_data[page].start_time;
+                                createSubtitle(page,audioPlayer,start_data[page].start_time,start_data[page].end_time,true);
+                            }
+                        } );
+                        initEvents();
+                    },
+                    initEvents = function() {
+
+                        var $slides = config.$bookBlock.children();
+
+                        // add navigation events
+                        config.$navNext.on( 'click touchstart', function() {
+                            config.$bookBlock.bookblock( 'next' );
+                            return true;
+                        } );
+
+                        config.$navPrev.on( 'click touchstart', function() {
+                            config.$bookBlock.bookblock( 'prev' );
+                            return true;
+                        } );
+
+                        config.$navFirst.on( 'click touchstart', function() {
+                            config.$bookBlock.bookblock( 'first' );
+                            return false;
+                        } );
+
+                        config.$navLast.on( 'click touchstart', function() {
+                            config.$bookBlock.bookblock( 'last' );
+                            return false;
+                        } );
+
+                        // add swipe events
+                        $slides.on( {
+                            'swipeleft' : function( event ) {
+                                config.$bookBlock.bookblock( 'prev' );
+                                return false;
+                            },
+                            'swiperight' : function( event ) {
+                                config.$bookBlock.bookblock( 'next' );
+                                return false;
+                            }
+                        } );
+
+                        // add keyboard events
+                        $( document ).keydown( function(e) {
+                            var keyCode = e.keyCode || e.which,
+                                arrow = {
+                                    left : 37,
+                                    up : 38,
+                                    right : 39,
+                                    down : 40
+                                };
+
+                            switch (keyCode) {
+                                case arrow.left:
+                                    config.$bookBlock.bookblock( 'next' );
+                                    break;
+                                case arrow.right:
+                                    config.$bookBlock.bookblock( 'prev' );
+                                    break;
+                            }
+                        } );
+                    };
+
+                return { init : init };
+
+            })();
+            Page.init();
+        }(window, document));
+    </script>
+    <script>
+        $("#bb-nav-next ").on('click', function() {
+       var $height = $('.bb-custom-side').height();
+        $('.bb-bookblock').css('height', $height);
+        });
+
+    </script>
+
+</body>
+</html>
